@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tod & Jenseits – Eine Weltreise</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --egypt-bg: #1a0f00;
+    --egypt-gold: #c9a84c;
+    --egypt-sand: #e8d5a3;
+    --mexico-bg: #0d001a;
+    --mexico-pink: #ff3fa4;
+    --mexico-orange: #ff7c00;
+    --mexico-teal: #00e5d1;
+    --japan-bg: #0a0a14;
+    --japan-red: #c0392b;
+    --japan-mist: #b0c4de;
+    --norse-bg: #070b12;
+    --norse-blue: #4a90d9;
+    --norse-ice: #a8d8ea;
+    --christ-bg: #0a0a0a;
+    --christ-gold: #f0d060;
+    --christ-white: #f5f5f0;
+    --transition: 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: background 0.3s;
+    mix-blend-mode: difference;
+  }
+
+  /* ===================== SLIDES ===================== */
+  .slides-container {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ===================== TITLE SLIDE ===================== */
+  .slide-title {
+    background: #000;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .slide-title .bg-stars {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 70%);
+  }
+
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+  }
+
+  @keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.5); }
+  }
+
+  .slide-title .content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .slide-title h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: #fff;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 60px rgba(255,255,255,0.3);
+    margin-bottom: 1rem;
+    animation: fadeInDown 1.2s ease both;
+  }
+
+  .slide-title .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    animation: fadeInDown 1.2s 0.3s ease both;
+  }
+
+  .slide-title .orbs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: float 8s ease-in-out infinite alternate;
+  }
+
+  .orb-1 { width: 400px; height: 400px; background: #c9a84c; top: -100px; left: -100px; animation-delay: 0s; }
+  .orb-2 { width: 300px; height: 300px; background: #ff3fa4; bottom: -50px; right: 10%; animation-delay: 2s; }
+  .orb-3 { width: 250px; height: 250px; background: #4a90d9; top: 30%; right: -50px; animation-delay: 4s; }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, -30px) scale(1.1); }
+  }
+
+  /* ===================== CULTURE SLIDES ===================== */
+  .slide-culture {
+    flex-direction: row;
+    overflow: hidden;
+  }
+
+  /* Egypt */
+  .slide-egypt { background: var(--egypt-bg); }
+  .slide-egypt .accent { color: var(--egypt-gold); }
+  .slide-egypt .panel-left { background: linear-gradient(135deg, #2a1800 0%, #1a0f00 100%); }
+  .slide-egypt .icon-bg { background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%); }
+  .slide-egypt .tag { background: var(--egypt-gold); color: #000; }
+  .slide-egypt .question-box { border-color: var(--egypt-gold); background: rgba(201,168,76,0.05); }
+  .slide-egypt .question-box::before { background: var(--egypt-gold); }
+  .slide-egypt .deco-line { background: var(--egypt-gold); }
+  .slide-egypt .panel-right { background: linear-gradient(135deg, #1a1000 0%, #0f0800 100%); }
+
+  /* Mexico */
+  .slide-mexico { background: var(--mexico-bg); }
+  .slide-mexico .accent { color: var(--mexico-orange); }
+  .slide-mexico .panel-left { background: linear-gradient(135deg, #1a0030 0%, #0d001a 100%); }
+  .slide-mexico .icon-bg { background: radial-gradient(circle, rgba(255,63,164,0.2) 0%, transparent 70%); }
+  .slide-mexico .tag { background: var(--mexico-pink); color: #fff; }
+  .slide-mexico .question-box { border-color: var(--mexico-teal); background: rgba(0,229,209,0.05); }
+  .slide-mexico .question-box::before { background: var(--mexico-teal); }
+  .slide-mexico .deco-line { background: linear-gradient(90deg, var(--mexico-pink), var(--mexico-orange)); }
+  .slide-mexico .panel-right { background: linear-gradient(135deg, #0d0020 0%, #070012 100%); }
+
+  /* Japan */
+  .slide-japan { background: var(--japan-bg); }
+  .slide-japan .accent { color: var(--japan-mist); }
+  .slide-japan .panel-left { background: linear-gradient(135deg, #101018 0%, #0a0a14 100%); }
+  .slide-japan .icon-bg { background: radial-gradient(circle, rgba(192,57,43,0.2) 0%, transparent 70%); }
+  .slide-japan .tag { background: var(--japan-red); color: #fff; }
+  .slide-japan .question-box { border-color: var(--japan-mist); background: rgba(176,196,222,0.05); }
+  .slide-japan .question-box::before { background: var(--japan-mist); }
+  .slide-japan .deco-line { background: var(--japan-red); }
+  .slide-japan .panel-right { background: linear-gradient(135deg, #0c0c18 0%, #070710 100%); }
+
+  /* Norse */
+  .slide-norse { background: var(--norse-bg); }
+  .slide-norse .accent { color: var(--norse-ice); }
+  .slide-norse .panel-left { background: linear-gradient(135deg, #0a1020 0%, #070b12 100%); }
+  .slide-norse .icon-bg { background: radial-gradient(circle, rgba(74,144,217,0.2) 0%, transparent 70%); }
+  .slide-norse .tag { background: var(--norse-blue); color: #fff; }
+  .slide-norse .question-box { border-color: var(--norse-ice); background: rgba(168,216,234,0.05); }
+  .slide-norse .question-box::before { background: var(--norse-ice); }
+  .slide-norse .deco-line { background: linear-gradient(90deg, var(--norse-blue), var(--norse-ice)); }
+  .slide-norse .panel-right { background: linear-gradient(135deg, #080c18 0%, #05070f 100%); }
+
+  /* Christ */
+  .slide-christ { background: var(--christ-bg); }
+  .slide-christ .accent { color: var(--christ-gold); }
+  .slide-christ .panel-left { background: linear-gradient(135deg, #141410 0%, #0a0a0a 100%); }
+  .slide-christ .icon-bg { background: radial-gradient(circle, rgba(240,208,96,0.2) 0%, transparent 70%); }
+  .slide-christ .tag { background: var(--christ-gold); color: #000; }
+  .slide-christ .question-box { border-color: var(--christ-gold); background: rgba(240,208,96,0.05); }
+  .slide-christ .question-box::before { background: var(--christ-gold); }
+  .slide-christ .deco-line { background: var(--christ-gold); }
+  .slide-christ .panel-right { background: linear-gradient(135deg, #101010 0%, #080808 100%); }
+
+  /* Panel layout */
+  .panel-left {
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 3rem;
+    position: relative;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .panel-right {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 4rem;
+    position: relative;
+  }
+
+  .icon-bg {
+    position: absolute;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .culture-icon {
+    font-size: clamp(4rem, 8vw, 7rem);
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 0 30px currentColor);
+    animation: pulse-icon 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 0.4em 1em;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+  }
+
+  .culture-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    color: #fff;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .deco-line {
+    width: 50px; height: 2px;
+    margin: 1.2rem 0;
+    border-radius: 2px;
+  }
+
+  .belief-text {
+    font-family: 'Lato', sans-serif;
+    font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 420px;
+    margin-bottom: 2.5rem;
+  }
+
+  .belief-text strong {
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .question-box {
+    border: 1px solid;
+    border-left-width: 3px;
+    padding: 1.2rem 1.5rem;
+    position: relative;
+    max-width: 420px;
+  }
+
+  .question-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 0.6rem;
+  }
+
+  .question-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 1.6vw, 1.15rem);
+    color: #fff;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Decorative elements */
+  .panel-number {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* Egypt hieroglyphs deco */
+  .egypt-deco {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    font-size: 1.5rem;
+    opacity: 0.15;
+    writing-mode: vertical-rl;
+    letter-spacing: 0.5em;
+  }
+
+  /* Mexico papel picado */
+  .mexico-deco {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 0;
+  }
+
+  .picado-piece {
+    flex: 1;
+    height: 30px;
+    opacity: 0.3;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+  }
+
+  /* Japan cherry blossoms */
+  .petal {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: rgba(192,57,43,0.4);
+    border-radius: 50% 0;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Norse runes */
+  .rune {
+    position: absolute;
+    font-size: 1rem;
+    color: rgba(74,144,217,0.15);
+    font-family: 'Cinzel', serif;
+    animation: runeFloat 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes runeFloat {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    100% { transform: translateY(-10px) rotate(5deg); opacity: 0.3; }
+  }
+
+  /* Christ light rays */
+  .light-ray {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(240,208,96,0.15), transparent);
+    transform-origin: top center;
+  }
+
+  /* ===================== NAVIGATION ===================== */
+  .nav-bar {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 100;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    padding: 0.7rem 1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+
+  .nav-dot.active {
+    background: #fff;
+    transform: scale(1.3);
+  }
+
+  .nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    margin: 0 0.3rem;
+  }
+
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+  }
+
+  .slide-counter {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.2em;
+    margin: 0 0.5rem;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  /* ===================== CONTENT ANIMATIONS ===================== */
+  .slide.active .tag { animation: fadeInLeft 0.6s 0.1s ease both; }
+  .slide.active .culture-icon { animation: fadeInScale 0.7s 0.2s ease both; }
+  .slide.active .culture-name { animation: fadeInLeft 0.6s 0.3s ease both; }
+  .slide.active .deco-line { animation: expandLine 0.5s 0.4s ease both; }
+  .slide.active .belief-text { animation: fadeInLeft 0.6s 0.5s ease both; }
+  .slide.active .question-box { animation: fadeInLeft 0.6s 0.7s ease both; }
+
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes expandLine {
+    from { width: 0; opacity: 0; }
+    to { width: 50px; opacity: 1; }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.6);
+    transition: width 0.5s ease;
+    z-index: 100;
+  }
+
+  /* Keyboard hint */
+  .key-hint {
+    position: fixed;
+    bottom: 6.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.2em;
+    font-family: 'Lato', sans-serif;
+    text-transform: uppercase;
+  }
+
+  /* Fullscreen toggle */
+  .fs-btn {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    z-index: 100;
+    transition: all 0.3s;
+  }
+
+  .fs-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+  @media (max-width: 700px) {
+    .slide-culture { flex-direction: column; }
+    .panel-left { width: 100%; height: 40%; padding: 2rem; }
+    .panel-right { width: 100%; height: 60%; padding: 2rem; }
+    .culture-icon { font-size: 3rem; }
+    .slide-title h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="progress-bar" id="progressBar"></div>
+<button class="fs-btn" onclick="toggleFullscreen()" title="Vollbild">⛶</button>
+<div class="key-hint">← → Pfeiltasten oder Klick zum Navigieren</div>
+
+<div class="slides-container" id="slidesContainer">
+
+  <!-- TITLE SLIDE -->
+  <div class="slide slide-title active" id="slide-0">
+    <div class="bg-stars" id="starField"></div>
+    <div class="orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="content">
+      <h1>Tod & Jenseits</h1>
+      <p class="subtitle">Eine Weltreise in 5 Stationen</p>
+    </div>
+  </div>
+
+  <!-- EGYPT -->
+  <div class="slide slide-culture slide-egypt" id="slide-1">
+    <div class="panel-left">
+      <div class="icon-bg"></div>
+      <div class="egypt-deco">𓂀 𓃭 𓆣 𓇋 𓈖</div>
+      <div class="culture-icon">⚖️</div>
+      <div class="panel-number">01</div>
+    </div>
+    <div class="panel-right">
+      <span class="tag">Station 1</span>
+      <h2 class="culture-name">Altes Ägypten</h2>
+      <div class="deco-line"></div>
+      <p class="belief-text">
+        Im Totengericht wiegt der Gott <strong>Anubis</strong> das Herz des Verstorbenen gegen die <strong>Feder der Maat</strong> – die Feder der Wahrheit. Ist das Herz leichter als die Feder, darf die Seele ins Paradies eintreten. Ist es schwerer, wird es vom Monster <strong>Ammit</strong> verschlungen.
+      </p>
+      <div class="question-box">
+        <div class="question-label">🔥 Frage zum Nachdenken</div>
+        <p class="question-text">Wofür möchtest du einmal erinnert werden?</p>
+      </div>
+      <div class="panel-number">01</div>
+    </div>
+  </div>
+
+  <!-- MEXICO -->
+  <div class="slide slide-culture slide-mexico" id="slide-2">
+    <div class="panel-left">
+      <div class="icon-bg"></div>
+      <div class="mexico-deco">
+        <div class="picado-piece" style="background:#ff3fa4"></div>
+        <div class="picado-piece" style="background:#ff7c00"></div>
+        <div class="picado-piece" style="background:#ffe600"></div>
+        <div class="picado-piece" style="background:#00e5d1"></div>
+        <div class="picado-piece" style="background:#ff3fa4"></div>
+        <div class="picado-piece" style="background:#ff7c00"></div>
+        <div class="picado-piece" style="background:#ffe600"></div>
+        <div class="picado-piece" style="background:#00e5d1"></div>
+      </div>
+      <div class="culture-icon">💀</div>
+    </div>
+    <div class="panel-right">
+      <span class="tag">Station 2</span>
+      <h2 class="culture-name">Mexiko</h2>
+      <div class="deco-line"></div>
+      <p class="belief-text">
+        Am <strong>Día de los Muertos</strong> – dem „Tag der Toten" – kehren die Verstorbenen jedes Jahr im November zurück, um ihre Familie zu besuchen. Bunte <strong>Ofrendas</strong> (Altäre) mit Fotos, Essen und Blumen empfangen sie. Der Tod ist kein Ende, sondern Teil des Kreislaufs des Lebens.
+      </p>
+      <div class="question-box">
+        <div class="question-label">🔥 Frage zum Nachdenken</div>
+        <p class="question-text">Welchem verstorbenen Menschen würdest du gerne nochmal begegnen?</p>
+      </div>
+      <div class="panel-number">02</div>
+    </div>
+  </div>
+
+  <!-- JAPAN -->
+  <div class="slide slide-culture slide-japan" id="slide-3">
+    <div class="panel-left">
+      <div class="icon-bg"></div>
+      <div class="culture-icon">☸️</div>
+      <!-- Petals -->
+      <div class="petal" style="left:20%;animation-duration:4s;animation-delay:0s;top:-10px"></div>
+      <div class="petal" style="left:50%;animation-duration:6s;animation-delay:1s;top:-10px"></div>
+      <div class="petal" style="left:80%;animation-duration:5s;animation-delay:2s;top:-10px"></div>
+      <div class="petal" style="left:35%;animation-duration:7s;animation-delay:0.5s;top:-10px"></div>
+    </div>
+    <div class="panel-right">
+      <span class="tag">Station 3</span>
+      <h2 class="culture-name">Japan / Buddhismus</h2>
+      <div class="deco-line"></div>
+      <p class="belief-text">
+        Im Buddhismus gibt es keine einmalige Seele, sondern den <strong>Kreislauf der Wiedergeburt</strong> (Samsara). Was du im Leben tust – dein <strong>Karma</strong> – bestimmt, als was du wiedergeboren wirst. Ziel ist das <strong>Nirwana</strong>: das Erlöschen aller Anhaftung und das Ende des Kreislaufs.
+      </p>
+      <div class="question-box">
+        <div class="question-label">🔥 Frage zum Nachdenken</div>
+        <p class="question-text">Was würdest du in einem nächsten Leben anders machen?</p>
+      </div>
+      <div class="panel-number">03</div>
+    </div>
+  </div>
+
+  <!-- NORSE -->
+  <div class="slide slide-culture slide-norse" id="slide-4">
+    <div class="panel-left">
+      <div class="icon-bg"></div>
+      <div class="rune" style="top:20%;left:15%;animation-delay:0s">ᚢ</div>
+      <div class="rune" style="top:60%;left:25%;animation-delay:1s">ᚹ</div>
+      <div class="rune" style="top:35%;left:70%;animation-delay:2s">ᚠ</div>
+      <div class="rune" style="top:75%;left:65%;animation-delay:3s">ᚱ</div>
+      <div class="culture-icon">⚔️</div>
+    </div>
+    <div class="panel-right">
+      <span class="tag">Station 4</span>
+      <h2 class="culture-name">Nordische Mythologie</h2>
+      <div class="deco-line"></div>
+      <p class="belief-text">
+        Wer tapfer im Kampf fällt, wird von den <strong>Walküren</strong> nach <strong>Walhalla</strong> geleitet – Odins prächtige Halle der Gefallenen. Dort kämpfen die <strong>Einherjer</strong> jeden Tag, werden abends wieder lebendig und feiern mit Met – bis zur Götterdämmerung <strong>Ragnarök</strong>.
+      </p>
+      <div class="question-box">
+        <div class="question-label">🔥 Frage zum Nachdenken</div>
+        <p class="question-text">Was wäre für dich ein „perfektes Danach"?</p>
+      </div>
+      <div class="panel-number">04</div>
+    </div>
+  </div>
+
+  <!-- CHRISTIANITY -->
+  <div class="slide slide-culture slide-christ" id="slide-5">
+    <div class="panel-left">
+      <div class="icon-bg"></div>
+      <!-- Light rays -->
+      <div class="light-ray" style="left:20%;transform:rotate(-5deg)"></div>
+      <div class="light-ray" style="left:40%;transform:rotate(0deg)"></div>
+      <div class="light-ray" style="left:60%;transform:rotate(5deg)"></div>
+      <div class="light-ray" style="left:80%;transform:rotate(8deg)"></div>
+      <div class="culture-icon">✝️</div>
+    </div>
+    <div class="panel-right">
+      <span class="tag">Station 5 – Unser Glaube</span>
+      <h2 class="culture-name">Christentum</h2>
+      <div class="deco-line"></div>
+      <p class="belief-text">
+        Das Christentum glaubt an die <strong>Auferstehung der Toten</strong>: Gott schenkt neues Leben – nicht weil wir es verdient haben, sondern aus <strong>Gnade</strong>. Der Tod ist nicht das letzte Wort. Jesus sagt: <em>„Ich bin die Auferstehung und das Leben."</em> Das ewige Leben ist Gemeinschaft mit Gott.
+      </p>
+      <div class="question-box">
+        <div class="question-label">🔥 Frage zum Nachdenken</div>
+        <p class="question-text">Was bedeutet das für dich persönlich?</p>
+      </div>
+      <div class="panel-number">05</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<nav class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <button class="nav-dot active" onclick="goTo(0)" id="dot-0"></button>
+  <button class="nav-dot" onclick="goTo(1)" id="dot-1"></button>
+  <button class="nav-dot" onclick="goTo(2)" id="dot-2"></button>
+  <button class="nav-dot" onclick="goTo(3)" id="dot-3"></button>
+  <button class="nav-dot" onclick="goTo(4)" id="dot-4"></button>
+  <button class="nav-dot" onclick="goTo(5)" id="dot-5"></button>
+  <span class="slide-counter" id="slideCounter">01 / 06</span>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</nav>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Stars
+  const starField = document.getElementById('starField');
+  for (let i = 0; i < 120; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 4 + 's';
+    star.style.animationDuration = (2 + Math.random() * 3) + 's';
+    star.style.opacity = Math.random() * 0.7 + 0.1;
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    starField.appendChild(star);
+  }
+
+  // Slides
+  let current = 0;
+  const total = 6;
+
+  function updateSlides() {
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      s.classList.toggle('active', i === current);
+    });
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    document.getElementById('slideCounter').textContent =
+      String(current + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    document.getElementById('progressBar').style.width =
+      ((current + 1) / total * 100) + '%';
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    updateSlides();
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  });
+
+  // Click anywhere (not on nav) to advance
+  document.getElementById('slidesContainer').addEventListener('click', nextSlide);
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // Auto-advance option (disabled, but can be re-enabled)
+  // setInterval(nextSlide, 8000);
+
+  updateSlides();
+</script>
+</body>
+</html>
